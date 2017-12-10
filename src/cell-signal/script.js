@@ -5,23 +5,37 @@ select.addEventListener('change', (e) => {
 });
 
 function changeValue(value) {
+  const isFull = value === 'full';
+  const limit = isFull ? 4 : value;
   const container = document.querySelector('.container');
-  for(let i = 0; i < value; i += 1) {
-    const pathData = [
-      `M ${1330 * (i + 1)} 105.9`,
-      'v-1900 h527.4 h527.4 V1900 h-1054.8',
-    ].join(' ');
+  for(let i = 0; i < limit; i += 1) {
+    const isLast = i === (limit - 1);
+    const pathData =
+      'm-582.86 3.7908 a465.71 465.71 0 1 1 -931.44 0 465.71 465.71 0 1 1 931.44 0z';
 
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const base = 3 - i;
+    const transform = `matrix(
+      ${5 - (base * 1.3785)} 0 0
+      ${5 - (base * 1.3785)}
+      ${5250.2 - (base * 1449.5)}
+      ${180.86 + (base * 9.22)}
+    )`;
+
     path.setAttribute('d', pathData);
+    path.setAttribute('stroke-linejoin', 'round');
+    path.setAttribute('transform', transform);
+    path.setAttribute('stroke', '#000');
+    path.setAttribute('stroke-linecap', 'round');
+    path.setAttribute('stroke-width', '80');
+    path.setAttribute('fill', '#fff');
     path.setAttribute('class', 'point');
 
-    const isLast = i === (value - 1);
-    if (isLast) {
+    if (isLast && !isFull) {
       const animate = buildAnimation();
       path.appendChild(animate);
     }
-    container.appendChild(path);
+    container.prepend(path);
   }
 }
 
